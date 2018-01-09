@@ -286,9 +286,12 @@ func singleError(errorsArray []error) error {
 	var dbError error
 	var errString string
 
-	for i := range errorsArray {
-		errString += errorsArray[i].Error()
+	if len(errorsArray) > 0 {
+		for i := range errorsArray {
+			errString += errorsArray[i].Error()
+		}
+		dbError = errors.New(errString)
+		return dbError
 	}
-	dbError = errors.New(errString)
-	return dbError
+	return nil
 }
