@@ -14,24 +14,24 @@ type UpdateListNameIntent struct {
 //Enact function is for UpdateListNameIntent to update list through http
 func (updateListIntent UpdateListNameIntent) Enact(w http.ResponseWriter, r *http.Request) {
 	var (
-		list   List
-		errors error
+		list               List
+		dbError, httpError error
 	)
 
 	w.Header().Set("Content-Type", "application/json")
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	body, httpError := ioutil.ReadAll(r.Body)
+	if httpError != nil {
+		http.Error(w, httpError.Error(), http.StatusBadRequest)
 	}
 
-	err = json.Unmarshal(body, &list)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	httpError = json.Unmarshal(body, &list)
+	if httpError != nil {
+		http.Error(w, httpError.Error(), http.StatusBadRequest)
 	}
 
-	errors = updateListIntent.ListRepo.Update(list)
-	if errors != nil {
-		http.Error(w, errors.Error(), http.StatusNoContent|http.StatusBadRequest)
+	dbError = updateListIntent.ListRepo.Update(list)
+	if dbError != nil {
+		http.Error(w, dbError.Error(), http.StatusNoContent|http.StatusBadRequest)
 	} else {
 		w.WriteHeader(http.StatusOK)
 	}

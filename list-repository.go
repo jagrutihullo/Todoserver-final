@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -40,6 +41,8 @@ func dbConnection() (*gorm.DB, error) {
 	Charset := os.Getenv("Charset")
 	ParseTime := os.Getenv("ParseTime")
 	Loc := os.Getenv("Loc")
+
+	fmt.Println("host", Host)
 
 	db, dbError := gorm.Open(DBHost, Username+"@"+Host+":"+Password+"@/"+DBName+"?charset="+
 		Charset+"&parseTime="+ParseTime+"&loc="+Loc)

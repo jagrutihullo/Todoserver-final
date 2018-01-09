@@ -17,27 +17,27 @@ type CreateTaskIntent struct {
 //Enact function is for CreateTaskIntent to create task through http
 func (createTask CreateTaskIntent) Enact(w http.ResponseWriter, r *http.Request) {
 	var (
-		list   List
-		task   Task
-		errors error
+		list               List
+		task               Task
+		dbError, httpError error
 	)
 
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	i, err := strconv.Atoi(params["id"])
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	i, httpError := strconv.Atoi(params["lid"])
+	if httpError != nil {
+		http.Error(w, httpError.Error(), http.StatusBadRequest)
 	}
 	list.ID = uint(i)
 
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	body, httpError := ioutil.ReadAll(r.Body)
+	if httpError != nil {
+		http.Error(w, httpError.Error(), http.StatusBadRequest)
 	}
 
-	err = json.Unmarshal(body, &task)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	httpError = json.Unmarshal(body, &task)
+	if httpError != nil {
+		http.Error(w, httpError.Error(), http.StatusBadRequest)
 	}
 	if task.Description == "" {
 		http.Error(w, "Task description cannot be empty", http.StatusBadRequest)
@@ -46,9 +46,9 @@ func (createTask CreateTaskIntent) Enact(w http.ResponseWriter, r *http.Request)
 
 	list.Tasks = make([]Task, 1)
 	list.Tasks[0] = task
-	errors = createTask.ListRepo.CreateTask(list)
-	if errors != nil {
-		http.Error(w, errors.Error(), http.StatusBadRequest)
+	dbError = createTask.ListRepo.CreateTask(list)
+	if dbError != nil {
+		http.Error(w, dbError.Error(), http.StatusBadRequest)
 	} else {
 		w.WriteHeader(http.StatusOK)
 	}

@@ -39,10 +39,10 @@ func main() {
 	router.HandleFunc("/lists/{id}", deleteList.Enact).Methods("DELETE")
 	router.HandleFunc("/lists", fetchAll.Enact).Methods("GET")
 
-	router.HandleFunc("/lists/{id}/tasks/{id}", fetchTask.Enact).Methods("GET")
-	router.HandleFunc("/lists/{id}/tasks", createTask.Enact).Methods("POST")
-	router.HandleFunc("/lists/{id}/tasks", updateTask.Enact).Methods("PATCH")
-	router.HandleFunc("/lists/{id}/tasks/{id}", deleteTask.Enact).Methods("DELETE")
+	router.HandleFunc("/lists/{lid}/tasks/{id}", fetchTask.Enact).Methods("GET")
+	router.HandleFunc("/lists/{lid}/tasks", createTask.Enact).Methods("POST")
+	router.HandleFunc("/lists/{lid}/tasks", updateTask.Enact).Methods("PATCH")
+	router.HandleFunc("/lists/{lid}/tasks/{id}", deleteTask.Enact).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":9000", router))
 	http.Handle("/", router)

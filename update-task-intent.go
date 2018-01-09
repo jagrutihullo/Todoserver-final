@@ -14,27 +14,27 @@ type UpdateTaskIntent struct {
 //Enact function is for UpdateTaskIntent to update task through http
 func (updateTask UpdateTaskIntent) Enact(w http.ResponseWriter, r *http.Request) {
 	var (
-		task   Task
-		errors error
-		list   List
+		task               Task
+		dbError, httpError error
+		list               List
 	)
 
 	w.Header().Set("Content-Type", "application/json")
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	body, httpError := ioutil.ReadAll(r.Body)
+	if httpError != nil {
+		http.Error(w, httpError.Error(), http.StatusBadRequest)
 	}
 
-	err = json.Unmarshal(body, &task)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	httpError = json.Unmarshal(body, &task)
+	if httpError != nil {
+		http.Error(w, httpError.Error(), http.StatusBadRequest)
 	}
 
 	list.Tasks = make([]Task, 1)
 	list.Tasks[0] = task
-	errors = updateTask.ListRepo.UpdateTask(list)
-	if errors != nil {
-		http.Error(w, errors.Error(), http.StatusNoContent|http.StatusBadRequest)
+	dbError = updateTask.ListRepo.UpdateTask(list)
+	if dbError != nil {
+		http.Error(w, dbError.Error(), http.StatusNoContent|http.StatusBadRequest)
 	} else {
 		w.WriteHeader(http.StatusOK)
 	}
