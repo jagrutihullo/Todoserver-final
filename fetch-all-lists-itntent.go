@@ -17,9 +17,9 @@ func (fetchAllIntent FetchAllListIntent) Enact(w http.ResponseWriter, r *http.Re
 		dbError, httpError error
 	)
 
-	lists, dbError = fetchAllIntent.ListRepo.FetchAll()
-
 	w.Header().Set("Content-Type", "application/json")
+
+	lists, dbError = fetchAllIntent.ListRepo.FetchAll()
 	if dbError != nil {
 		http.Error(w, dbError.Error(), http.StatusNoContent|http.StatusBadRequest)
 	}

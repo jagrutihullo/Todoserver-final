@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -42,9 +41,7 @@ func dbConnection() (*gorm.DB, error) {
 	ParseTime := os.Getenv("ParseTime")
 	Loc := os.Getenv("Loc")
 
-	fmt.Println("host", Host)
-
-	db, dbError := gorm.Open(DBHost, Username+"@"+Host+":"+Password+"@/"+DBName+"?charset="+
+	db, dbError := gorm.Open(DBHost, Username+":"+Password+"@"+Host+"/"+DBName+"?charset="+
 		Charset+"&parseTime="+ParseTime+"&loc="+Loc)
 	return db, dbError
 }
@@ -68,7 +65,7 @@ func (glr GormListRepo) Create(listEntity List) error {
 
 	if db.HasTable(&ListModel{}) == false {
 		db.CreateTable(&ListModel{})
-		db.CreateTable(&ListModel{})
+		db.CreateTable(&TaskModel{})
 	}
 
 	todoList.Name = listEntity.Name

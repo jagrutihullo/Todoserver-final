@@ -20,6 +20,8 @@ func (fetchListIntent FetchListIntent) Enact(w http.ResponseWriter, r *http.Requ
 		dbError, httpError error
 	)
 
+	w.Header().Set("Content-Type", "application/json")
+
 	params := mux.Vars(r)
 	i, httpError := strconv.Atoi(params["id"])
 	if httpError != nil {
@@ -28,8 +30,6 @@ func (fetchListIntent FetchListIntent) Enact(w http.ResponseWriter, r *http.Requ
 
 	list.ID = uint(i)
 	list, dbError = fetchListIntent.ListRepo.FetchByID(list)
-
-	w.Header().Set("Content-Type", "application/json")
 	if dbError != nil {
 		http.Error(w, dbError.Error(), http.StatusNoContent|http.StatusBadRequest)
 	}

@@ -35,5 +35,4 @@ func (updateListIntent UpdateListNameIntent) Enact(w http.ResponseWriter, r *htt
 	} else {
 		w.WriteHeader(http.StatusOK)
 	}
-
 }

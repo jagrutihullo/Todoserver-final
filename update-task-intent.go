@@ -38,5 +38,4 @@ func (updateTask UpdateTaskIntent) Enact(w http.ResponseWriter, r *http.Request)
 	} else {
 		w.WriteHeader(http.StatusOK)
 	}
-
 }

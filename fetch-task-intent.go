@@ -35,7 +35,7 @@ func (fetchTask FetchTaskIntent) Enact(w http.ResponseWriter, r *http.Request) {
 	if dbError != nil {
 		http.Error(w, dbError.Error(), http.StatusNoContent|http.StatusBadRequest)
 	}
-	taskJSON, httpError := json.Marshal(list)
+	taskJSON, httpError := json.Marshal(list.Tasks[0])
 	if httpError != nil {
 		http.Error(w, httpError.Error(), http.StatusBadRequest)
 	}

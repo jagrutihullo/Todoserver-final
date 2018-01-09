@@ -19,13 +19,12 @@ func (deleteListIntent DeleteListIntent) Enact(w http.ResponseWriter, r *http.Re
 		list               List
 	)
 
+	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	i, httpError := strconv.Atoi(params["id"])
 	if httpError != nil {
 		http.Error(w, httpError.Error(), http.StatusBadRequest)
 	}
-
-	w.Header().Set("Content-Type", "application/json")
 
 	list.ID = uint(i)
 	dbError = deleteListIntent.ListRepo.Delete(list)
